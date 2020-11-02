@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Type</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <form id="form">
+        <div>
+            <label for="typeText">Add new type:</label>
+            <input autofocus id="typeText" name="typeText" required oninput="formValidity()" type="text" minlength="4"
+                pattern="[A-Z][a-z]+" title="Le type doit commencer par une majuscule, suivi de minuscules" />
+        </div>
+        <div>
+            <input type="submit" value="Envoyer">
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', e => {
+            e.preventDefault();
+
+            const value = document.getElementById("typeText").value;
+
+            $.ajax({
+                type: "post",
+                url: "/api/type",
+                data: {
+                    "value": value
+                },
+                success: () => {
+                    location.replace("/");
+                },
+                dataType: 'json'
+            });
+        });
+
+        const myVar = [];
+
+        <% for (let i = 0; i < type.length; i++) { %>
+            myVar.push('<%= type[i].name %>');
+        <% } %>
+
+        const formValidity = () => {
+            const form = document.getElementById("form");
+            const input = document.querySelector('input');
+
+            let isPresent = false;
+
+            myVar.forEach((type) => {
+                if (input.value === type) {
+                    console.log(type, input.value)
+                    isPresent = true;
+                }
+
+                input.setCustomValidity(isPresent ? 'Type is already in use' : '');
+            });
+
+            form.reportValidity();
+        }
+    </script>
+</body>
+
+</html>
